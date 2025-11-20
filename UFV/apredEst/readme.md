@@ -1,1 +1,1 @@
-## Conceitos estatísticos no R
+## Aprendizado Estatístico
