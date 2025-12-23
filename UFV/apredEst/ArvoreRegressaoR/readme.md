@@ -1,1 +1,1 @@
-# Árvore de regressão no softare R
+# Árvore de regressão no software R
