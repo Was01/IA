@@ -1,2 +1,0 @@
-
-## Regressão Linear

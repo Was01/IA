@@ -1,1 +1,0 @@
-# Adaline e regra delta
