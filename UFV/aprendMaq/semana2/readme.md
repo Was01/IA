@@ -1,1 +1,1 @@
-## Aprendizado supervisionado
+## Aprendizado supervisionado / Regressão logística / Perceptron / Multilayer Perceptron
