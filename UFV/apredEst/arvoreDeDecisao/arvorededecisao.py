@@ -79,7 +79,7 @@ for alpha in ccp_alphas:
     cv_scores.append(np.mean(scores))
 
 
-3. # 3. Encontramos o melhor alpha baseado na validação cruzada
+ # 3. Encontramos o melhor alpha baseado na validação cruzada
 
 indice_melhor_alpha = np.argmax(cv_scores)
 best_cpp_alpha = ccp_alphas[indice_melhor_alpha]
