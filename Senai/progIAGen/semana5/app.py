@@ -35,30 +35,9 @@ COLS = ["temperatura", "vibracao", "pressao", "tempo_operacao"]
 # Dados
 # ---------------------------------------------------------------------------
 @st.cache_data
-def gerar_dados_exemplo(n=200, seed=42):
-    """Gera um dataset sintético com a mesma estrutura estatística do dataset
-    original do curso, para permitir explorar o dashboard sem precisar do CSV."""
-    rng = np.random.default_rng(seed)
-    df = pd.DataFrame({
-        "temperatura": rng.normal(78, 17.8, n),
-        "vibracao": rng.normal(4.0, 2.1, n).clip(0.5),
-        "pressao": rng.normal(31.7, 4.0, n),
-        "tempo_operacao": rng.uniform(42, 255, n),
-    })
-    risco = (
-        0.03 * (df["temperatura"] - 78)
-        + 0.6 * (df["vibracao"] - 4)
-        + 0.02 * (df["pressao"] - 31.7)
-        + 0.01 * (df["tempo_operacao"] - 150)
-    )
-    prob = 1 / (1 + np.exp(-risco))
-    df["falha"] = (rng.random(n) < prob).astype(int)
-    # injeta valores faltantes como no dataset original
-    for col in ["temperatura", "vibracao", "pressao"]:
-        idx = rng.choice(n, size=16, replace=False)
-        df.loc[idx, col] = np.nan
+def carregar_dados_exemplo():
+    df=pd.read_csv("dataset_sensores_industriais_200_registros.csv")
     return df
-
 
 @st.cache_data
 def tratar_dados(df):
@@ -161,7 +140,7 @@ usar_exemplo = st.sidebar.checkbox("Usar dados de exemplo (sintéticos)", value=
 if arquivo is not None:
     df_raw = pd.read_csv(arquivo)
 elif usar_exemplo:
-    df_raw = gerar_dados_exemplo()
+    df_raw = carregar_dados_exemplo()
 else:
     st.warning("Envie um CSV ou marque a opção de dados de exemplo na barra lateral.")
     st.stop()
