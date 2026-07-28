@@ -10,6 +10,7 @@ Original file is located at
 """
 
 import numpy as np
+import pandas as pd
 
 # Função Sinal
 
@@ -56,14 +57,20 @@ from sklearn.model_selection import train_test_split
 
 from sklearn.preprocessing import StandardScaler
 
-dados=load_iris()
+iris=load_iris()
 
-print(dados.feature_names)
-print(dados.target)
+df_iris=pd.DataFrame(iris.data,columns=iris.feature_names)
 
-setosa_versicolor = (dados.target == 0) | (dados.target == 1)
-X = dados.data[setosa_versicolor,2:]
-y = dados.target[setosa_versicolor]
+df_iris['target']=iris.target
+
+df_iris.head()
+
+X=df_iris.iloc[:,[2,3]]
+y=df_iris.iloc[:,4]
+
+setosa_versicolor = (y == 0) | (y == 1);
+X = X[setosa_versicolor].values
+y = y[setosa_versicolor].values
 
 x_train, x_test, y_train, y_test = train_test_split(X, y, test_size=0.5, random_state=42,stratify=y)
 

@@ -10,6 +10,7 @@ Original file is located at
 #Bibliotecas
 
 import numpy as np
+import pandas as pd
 import matplotlib.pyplot as plt
 
 # Função sinal
@@ -25,37 +26,37 @@ def ativacao_linear(z):
 def treinar_adaline(X, d, eta=0.0005, tol=1e-6, epocas=1000):
     n_amostras, n_atributos = X.shape
 
-    # 1. Inicialização com valores pequenos (ou zeros)
+    # 1. Inicialização de pesos pequenos
     w = np.random.randn(n_atributos) * 0.01
-    b = np.random.randn() * 0.01
+    b = 0.0  # Em Adaline, iniciar o bias em 0 é uma boa prática
 
     historico_custo = []
 
     for epoca in range(epocas):
-        custo_amostra = []
-
         indices = np.random.permutation(n_amostras)
 
         for i in indices:
             x_i = X[i]
 
+            # Entrada linear (Adaline não aplica degrau/sigmoide no treino)
             z = np.dot(x_i, w) + b
             y_linear = ativacao_linear(z)
 
+            # Cálculo do erro
             erro = d[i] - y_linear
 
-            # Regra do Delta
+            # Regra do Delta (SGD)
             w += eta * erro * x_i
             b += eta * erro
 
-            custo_amostra.append((erro**2) / 2)
-
-        custo = np.sum(custo_amostra)
+        # 2. Custo da época calculado com os pesos atualizados (MSE)
+        erros_epoca = d - (np.dot(X, w) + b)
+        custo = 0.5 * np.mean(erros_epoca ** 2)
         historico_custo.append(custo)
 
-        # 2. Critério de parada baseado na variação do custo
+        # 3. Critério de parada por tolerância
         if epoca > 0 and abs(historico_custo[-2] - historico_custo[-1]) < tol:
-            print(f"Convergiu na época {epoca + 1}! Custo = {custo:.6f}")
+            print(f"Convergiu na época {epoca + 1}! Custo (MSE) = {custo:.6f}")
             break
 
     return w, b, historico_custo
@@ -66,14 +67,18 @@ from sklearn.model_selection import train_test_split
 
 from sklearn.preprocessing import StandardScaler
 
-dados=load_iris()
+iris=load_iris()
 
-print(dados.feature_names)
-print(dados.target)
+df_iris=pd.DataFrame(data=iris.data,columns=iris.feature_names)
 
-setosa_versicolor = (dados.target == 0) | (dados.target == 1)
-X = dados.data[setosa_versicolor,2:]
-y = dados.target[setosa_versicolor]
+df_iris['target']=iris.target
+
+X=df_iris.iloc[:,[2,3]]
+y=df_iris.iloc[:,4]
+
+setosa_versicolor = (y == 0) | (y == 1)
+X = X[setosa_versicolor].values
+y = y[setosa_versicolor].values
 
 x_train, x_test, y_train, y_test = train_test_split(X, y, test_size=0.5, random_state=42,stratify=y)
 
