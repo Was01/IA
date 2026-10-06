@@ -1,1 +1,0 @@
-# Inteligência artificial na prática
