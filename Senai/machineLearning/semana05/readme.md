@@ -1,1 +1,1 @@
-# Aprendizado de máquina
+# Regressão linear, regressão polinomial/kmeans
